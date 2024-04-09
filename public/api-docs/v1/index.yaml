@@ -1,162 +1,77 @@
 openapi: 3.0.3
 info:
-  title: Tables
-  description: Производит хранение, поиск и управление столиками
+  title: Ensi Backend Skeleton (Replace me)
+  contact:
+    name: API Support
+    url: https://ensi.tech/contacts
+    email: mail@greensight.ru
   version: 1.0.0
+  description: Ensi Backend Skeleton Description (Replace me)
 servers:
-  - url: 'http://localhost:8000'
+  - url: /api/v1
 tags:
-  - name: tables
+  - name: examples
+    description: Тэг-пример
 paths:
-  /tables:
+  /examples/{id}:
     get:
       tags:
-        - tables
-      x-lg-handler: 'App\Http\ApiV1\Modules\Tables\Controllers\TableController@create'
-      summary: Список столиков
-      description: Список столиков
-      operationId: 'listTables'
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Table'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
-    post:
-      tags:
-        - tables
-      summary: Добавление столика
-      description: Добавление столика
-      operationId: 'addTable'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Table'
-        required: true
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Table'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
-  /tables/{id}:
-    get:
-      tags:
-        - tables
-      summary: Столик
-      description: Столик
-      operationId: 'getTable'
+        - examples
+      operationId: getExample
+      x-lg-handler: 'App\Http\ApiV1\Modules\Foos\Controllers\FoosController@get'
+      x-lg-route-name: 'getExample'
+      x-lg-skip-request-generation: true
+      summary: Получение объекта типа Example
+      description: Получение объекта типа Example
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/PathId'
+        - $ref: '#/components/parameters/QueryInclude'
       responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Table'
-        '404':
+        #"200":
+          #description: Успешный ответ
+          # content:
+          #  application/json:
+          #    schema:
+          #      $ref: './customers.yaml#/CustomerResponse'
+        "404":
           $ref: '#/components/responses/NotFound'
-        '500':
+        "500":
           $ref: '#/components/responses/ServerError'
-    put:
-      tags:
-        - tables
-      summary: Редактирование столика
-      description: Редактирование столика
-      operationId: 'editTable'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Table'
-        required: true
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Table'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
-    delete:
-      tags:
-        - tables
-      summary: Удаление столика
-      description: Удаление столика
-      operationId: 'deleteTable'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '204':
-          description: Успешный ответ
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
-  
 components:
+  parameters:
+    QueryInclude:
+      $ref: './common_parameters.yaml#/QueryInclude'
+    PathId:
+      $ref: './common_parameters.yaml#/PathId'
   schemas:
-    Table:
+    EmptyDataResponse:
       type: object
       properties:
-        id:
-          type: integer
-        seats:
-          type: integer
-        location:
-          type: string
+        data:
+          type: object
+          nullable: true
+        meta:
+          type: object
       required:
-        - id
-        - seats
-        - location
-    ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 404
-        message:
-          type: string
-          example: Not Found
+          - data
+    PaginationTypeEnum:
+      $ref: './common_schemas.yaml#/PaginationTypeEnum'
   responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: './errors.yaml#/ErrorResponse'
     NotFound:
       description: Not Found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Table'
+            $ref: './errors.yaml#/ErrorResponse'
     ServerError:
-      description: Server Error
+      description: Internal Server Error
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: './errors.yaml#/ErrorResponse'

@@ -5,12 +5,7 @@
  * Do NOT edit it manually. Run `php artisan openapi:generate-server`.
  */
 
-
-use App\Http\ApiV1\Modules\Tables\Controllers\TableController;
+use App\Http\ApiV1\Modules\Foos\Controllers\FoosController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/tables', [TableController::class, 'getTables']);
-Route::post('/tables', [TableController::class, 'addTable']);
-Route::get('/tables/{id}', [TableController::class, 'getTable']);
-Route::put('/tables/{id}', [TableController::class, 'editTable']);
-Route::delete('/tables/{id}', [TableController::class, 'deleteTable']);
+Route::get('examples/{id}', [FoosController::class, 'get'])->name('getExample');
