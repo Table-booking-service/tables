@@ -4,20 +4,22 @@ namespace App\Http\ApiV1\Modules\Tables\Controllers;
 
 use App\Domain\Tables\Models\Table;
 use App\Http\ApiV1\Modules\Tables\Requests\AddTableRequest;
+use App\Http\ApiV1\Modules\Tables\Requests\DeleteTableRequest;
 use App\Http\ApiV1\Modules\Tables\Requests\EditTableRequest;
 use App\Http\ApiV1\Modules\Tables\Resources\TableResource;
-use Illuminate\Routing\Controller;
-use phpDocumentor\Reflection\Types\Collection;
 
-class TableController extends Controller
+class TableController
 {
-    public function getTables(): array|\Illuminate\Database\Eloquent\Collection
+    public function getTables(): array
     {
-        return Table::all();
+        //Возвращает список столиков
+        $tables = Table::all();
+        return TableResource::collection($tables)->toArray(request());
     }
 
     public function addTable(AddTableRequest $request): TableResource
     {
+        //Добавляет столик
         $table = new Table();
         $table->seats = $request->get('seats');
         $table->location = $request->get('location');
@@ -26,9 +28,16 @@ class TableController extends Controller
         return new TableResource($table);
     }
 
-    public function editTable(EditTableRequest $request): TableResource
+    public function getTable(int $id): TableResource
     {
-        $table = Table::query()->findOrFail($request->get('id'));
+        //Возвращает столик
+        return new TableResource(Table::query()->findOrFail($id));
+    }
+
+    public function editTable(int $id, EditTableRequest $request): TableResource
+    {
+        //Изменяет столик
+        $table = Table::query()->findOrFail($id);
         $table->seats = $request->get('seats');
         $table->location = $request->get('location');
         $table->save();
@@ -36,14 +45,11 @@ class TableController extends Controller
         return new TableResource($table);
     }
 
-    public function deleteTable(int $id): void
+    public function deleteTable(int $id, DeleteTableRequest $request): TableResource
     {
-        Table::query()->findOrFail($id)->delete();
-    }
-
-    public function getTable(int $id): TableResource
-    {
+        //Удаляет столик
         $table = Table::query()->findOrFail($id);
+        $table->delete();
 
         return new TableResource($table);
     }

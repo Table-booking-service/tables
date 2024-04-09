@@ -4,7 +4,7 @@ info:
   description: Производит хранение, поиск и управление столиками
   version: 1.0.0
 servers:
-  - url: 'http://localhost:8000'
+  - url: '/api/v1'
 tags:
   - name: tables
 paths:
@@ -12,7 +12,7 @@ paths:
     get:
       tags:
         - tables
-      x-lg-handler: 'App\Http\ApiV1\Modules\Tables\Controllers\TableController@create'
+      x-lg-handler: 'App\Http\ApiV1\Modules\Tables\Controllers\TableController@getTables'
       summary: Список столиков
       description: Список столиков
       operationId: 'listTables'
@@ -22,7 +22,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Table'
+                $ref: '#/components/schemas/Tables'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -30,6 +30,7 @@ paths:
     post:
       tags:
         - tables
+      x-lg-handler: 'App\Http\ApiV1\Modules\Tables\Controllers\TableController@addTable'
       summary: Добавление столика
       description: Добавление столика
       operationId: 'addTable'
@@ -54,6 +55,7 @@ paths:
     get:
       tags:
         - tables
+      x-lg-handler: 'App\Http\ApiV1\Modules\Tables\Controllers\TableController@getTable'
       summary: Столик
       description: Столик
       operationId: 'getTable'
@@ -77,6 +79,7 @@ paths:
     put:
       tags:
         - tables
+      x-lg-handler: 'App\Http\ApiV1\Modules\Tables\Controllers\TableController@editTable'
       summary: Редактирование столика
       description: Редактирование столика
       operationId: 'editTable'
@@ -106,6 +109,7 @@ paths:
     delete:
       tags:
         - tables
+      x-lg-handler: 'App\Http\ApiV1\Modules\Tables\Controllers\TableController@deleteTable'
       summary: Удаление столика
       description: Удаление столика
       operationId: 'deleteTable'
@@ -138,6 +142,12 @@ components:
         - id
         - seats
         - location
+
+    Tables:
+      type: array
+      items:
+        $ref: '#/components/schemas/Table'
+
     ErrorResponse:
       type: object
       properties:
