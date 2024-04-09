@@ -9,8 +9,9 @@ class EditTableRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'location' => ['required', 'string'],
+            'id' => ['required', 'integer'],
             'seats' => ['required', 'integer'],
+            'location' => ['required', 'string'],
         ];
     }
 }

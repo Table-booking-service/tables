@@ -22,7 +22,6 @@ class Table extends Model
     use HasFactory;
     protected $table = 'tables';
     protected $fillable = [
-        'id',
         'seats',
         'location',
     ];

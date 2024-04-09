@@ -9,8 +9,8 @@ class AddTableRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'location' => ['required', 'string'],
             'seats' => ['required', 'integer'],
+            'location' => ['required', 'string'],
         ];
     }
 }
