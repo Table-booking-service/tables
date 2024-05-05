@@ -22,9 +22,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tables'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: './tables/tables.yaml#/TablesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/ServerError'
     post:
@@ -38,17 +38,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Table'
+              $ref: './tables/tables.yaml#/AddTableRequest'
         required: true
       responses:
-        '200':
+        '201':
           description: Успешный ответ
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Table'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: './tables/tables.yaml#/TableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/ServerError'
   /tables/{id}:
@@ -60,18 +60,14 @@ paths:
       description: Столик
       operationId: 'getTable'
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/PathId'
       responses:
         '200':
           description: Успешный ответ
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Table'
+                $ref: './tables/tables.yaml#/TableResponse'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -84,24 +80,20 @@ paths:
       description: Редактирование столика
       operationId: 'editTable'
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/PathId'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Table'
+              $ref: './tables/tables.yaml#/Table'
         required: true
       responses:
-        '200':
+        '204':
           description: Успешный ответ
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Table'
+                $ref: '#/components/schemas/EmptyDataResponse'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -114,40 +106,34 @@ paths:
       description: Удаление столика
       operationId: 'deleteTable'
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/PathId'
       responses:
         '204':
           description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/ServerError'
   
 components:
+  parameters:
+    PathId:
+      $ref: './common_parameters.yaml#/PathId'
   schemas:
-    Table:
+    EmptyDataResponse:
       type: object
       properties:
-        id:
-          type: integer
-        seats:
-          type: integer
-        location:
-          type: string
+        data:
+          type: object
+          nullable: true
+        meta:
+          type: object
       required:
-        - id
-        - seats
-        - location
-
-    Tables:
-      type: array
-      items:
-        $ref: '#/components/schemas/Table'
-
+        - data
     ErrorResponse:
       type: object
       properties:
@@ -158,15 +144,21 @@ components:
           type: string
           example: Not Found
   responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: './errors.yaml#/ErrorResponse'
     NotFound:
       description: Not Found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Table'
+            $ref: './errors.yaml#/ErrorResponse'
     ServerError:
       description: Server Error
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: './errors.yaml#/ErrorResponse'
