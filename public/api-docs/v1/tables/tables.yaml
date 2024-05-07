@@ -1,5 +1,19 @@
 AddTableRequest:
   type: object
+  headers:
+    X-API-SECRET: string
+  properties:
+    seats:
+      type: integer
+    location:
+      type: string
+  required:
+    - seats
+
+EditTableRequest:
+  type: object
+  headers:
+    X-API-SECRET: string
   properties:
     seats:
       type: integer
@@ -22,11 +36,6 @@ Table:
     - seats
     - location
 
-Tables:
-  type: array
-  items:
-    $ref: '#/Table'
-
 TableResponse:
   type: object
   properties:
@@ -41,7 +50,9 @@ TablesResponse:
   type: object
   properties:
     data:
-      $ref: '#/Tables'
+      type: array
+      items:
+        $ref: '#/Table'
     meta:
       type: object
   required:

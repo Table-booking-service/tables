@@ -16,6 +16,12 @@ paths:
       summary: Список столиков
       description: Список столиков
       operationId: 'listTables'
+      parameters:
+        - in: header
+          name: x-api-secret
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: Успешный ответ
@@ -23,8 +29,8 @@ paths:
             application/json:
               schema:
                 $ref: './tables/tables.yaml#/TablesResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/ServerError'
     post:
@@ -34,6 +40,12 @@ paths:
       summary: Добавление столика
       description: Добавление столика
       operationId: 'addTable'
+      parameters:
+        - in: header
+          name: x-api-secret
+          schema:
+            type: string
+          required: true
       requestBody:
         content:
           application/json:
@@ -49,6 +61,8 @@ paths:
                 $ref: './tables/tables.yaml#/TableResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/ServerError'
   /tables/{id}:
@@ -61,6 +75,11 @@ paths:
       operationId: 'getTable'
       parameters:
         - $ref: '#/components/parameters/PathId'
+        - in: header
+          name: x-api-secret
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: Успешный ответ
@@ -68,6 +87,8 @@ paths:
             application/json:
               schema:
                 $ref: './tables/tables.yaml#/TableResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -81,19 +102,28 @@ paths:
       operationId: 'editTable'
       parameters:
         - $ref: '#/components/parameters/PathId'
+        - in: header
+          name: x-api-secret
+          schema:
+            type: string
+          required: true
       requestBody:
         content:
           application/json:
             schema:
-              $ref: './tables/tables.yaml#/Table'
+              $ref: './tables/tables.yaml#/EditTableRequest'
         required: true
       responses:
-        '204':
+        '200':
           description: Успешный ответ
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmptyDataResponse'
+                $ref: './tables/tables.yaml#/TableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -107,13 +137,20 @@ paths:
       operationId: 'deleteTable'
       parameters:
         - $ref: '#/components/parameters/PathId'
+        - in: header
+          name: x-api-secret
+          schema:
+            type: string
+          required: true
       responses:
-        '204':
+        '200':
           description: Успешный ответ
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EmptyDataResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -143,7 +180,15 @@ components:
         message:
           type: string
           example: Not Found
+    PaginationTypeEnum:
+      $ref: './common_schemas.yaml#/PaginationTypeEnum'
   responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: './errors.yaml#/ErrorResponse'
     BadRequest:
       description: Bad Request
       content:
