@@ -19,6 +19,7 @@ paths:
       parameters:
         - in: header
           name: x-api-secret
+          description: Защищенный ключ
           schema:
             type: string
           required: true
@@ -43,6 +44,7 @@ paths:
       parameters:
         - in: header
           name: x-api-secret
+          description: Защищенный ключ
           schema:
             type: string
           required: true
@@ -77,6 +79,7 @@ paths:
         - $ref: '#/components/parameters/PathId'
         - in: header
           name: x-api-secret
+          description: Защищенный ключ
           schema:
             type: string
           required: true
@@ -104,6 +107,7 @@ paths:
         - $ref: '#/components/parameters/PathId'
         - in: header
           name: x-api-secret
+          description: Защищенный ключ
           schema:
             type: string
           required: true
@@ -139,6 +143,7 @@ paths:
         - $ref: '#/components/parameters/PathId'
         - in: header
           name: x-api-secret
+          description: Защищенный ключ
           schema:
             type: string
           required: true

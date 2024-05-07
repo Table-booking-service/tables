@@ -5,8 +5,10 @@ AddTableRequest:
   properties:
     seats:
       type: integer
+      description: Количество мест
     location:
       type: string
+      description: Местоположение
   required:
     - seats
 
@@ -17,8 +19,10 @@ EditTableRequest:
   properties:
     seats:
       type: integer
+      description: Количество мест
     location:
       type: string
+      description: Местоположение
   required:
     - seats
 
@@ -27,10 +31,13 @@ Table:
   properties:
     id:
       type: integer
+      description: Идентификатор
     seats:
       type: integer
+      description: Количество мест
     location:
       type: string
+      description: Местоположение
   required:
     - id
     - seats

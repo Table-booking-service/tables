@@ -1,7 +1,14 @@
 <?php
 
+use App\Domain\Tables\Models\Table;
+use App\Http\ApiV1\Modules\Tables\Tests\Factories\CreateRequestFactory;
 use App\Http\ApiV1\Support\Tests\ApiV1ComponentTestCase;
 
+use Ensi\TestFactories\FakerProvider;
+
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\assertModelMissing;
 use function Pest\Laravel\delete;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
@@ -31,9 +38,17 @@ test('POST http://localhost:8000/api/v1/tables 201', function () {
     $key = env('X_API_SECRET_KEY');
     $iv = str_repeat('0', openssl_cipher_iv_length($algo));
     $value = openssl_encrypt($data, $algo, $key, 0, $iv);
-    postJson('http://localhost:8000/api/v1/tables', ['seats' => 10, 'location' => 'test'], ['X-API-SECRET' => $value])
+
+    $request = CreateRequestFactory::new()->make();
+
+    postJson('http://localhost:8000/api/v1/tables', $request, ['X-API-SECRET' => $value])
         ->assertStatus(201);
-});
+
+    assertDatabaseHas((new Table())->getTable(), [
+        'seats' => $request['seats'],
+        'location' => $request['location'],
+    ]);
+})->with(FakerProvider::$optionalDataset);
 
 test('POST http://localhost:8000/api/v1/tables 400', function () {
     $data = env('X_API_SECRET_DATA');
@@ -57,6 +72,8 @@ test('GET http://localhost:8000/api/v1/tables/{id} 200', function () {
     $iv = str_repeat('0', openssl_cipher_iv_length($algo));
     $value = openssl_encrypt($data, $algo, $key, 0, $iv);
     getJson('http://localhost:8000/api/v1/tables/1', ['X-API-SECRET' => $value])
+        ->assertJsonStructure(['data' => ['id', 'seats', 'location']])
+        ->assertJsonPath('data.id', 1)
         ->assertStatus(200);
 });
 
@@ -81,8 +98,17 @@ test('PUT http://localhost:8000/api/v1/tables/{id} 200', function () {
     $key = env('X_API_SECRET_KEY');
     $iv = str_repeat('0', openssl_cipher_iv_length($algo));
     $value = openssl_encrypt($data, $algo, $key, 0, $iv);
-    putJson('http://localhost:8000/api/v1/tables/1', ['seats' => 10, 'location' => 'test'], ['X-API-SECRET' => $value])
-        ->assertStatus(200);
+    $model = App\Domain\Tables\Models\Table::factory()->create();
+    $request = CreateRequestFactory::new()->make();
+    putJson("http://localhost:8000/api/v1/tables/{$model->id}", $request, ['X-API-SECRET' => $value])
+        ->assertStatus(200)
+        ->assertJsonPath('data.location', $request['location']);
+
+    assertDatabaseHas((new Table())->getTable(), [
+        'id' => $model->id,
+        'seats' => $request['seats'],
+        'location' => $request['location'],
+    ]);
 });
 
 test('PUT http://localhost:8000/api/v1/tables/{id} 400', function () {
@@ -116,8 +142,10 @@ test('DELETE http://localhost:8000/api/v1/tables/{id} 200', function () {
     $key = env('X_API_SECRET_KEY');
     $iv = str_repeat('0', openssl_cipher_iv_length($algo));
     $value = openssl_encrypt($data, $algo, $key, 0, $iv);
-    delete('http://localhost:8000/api/v1/tables/1', [], ['X-API-SECRET' => $value])
+    $model = App\Domain\Tables\Models\Table::factory()->create();
+    delete("http://localhost:8000/api/v1/tables/{$model->id}", [], ['X-API-SECRET' => $value])
         ->assertStatus(200);
+    assertModelMissing($model);
 });
 
 test('DELETE http://localhost:8000/api/v1/tables/{id} 403', function () {

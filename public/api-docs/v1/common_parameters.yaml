@@ -5,7 +5,7 @@ PathId:
   schema:
     type: integer
     minimum: 1
-  description: Числовой id
+  description: Числовой id столика
   example: 1
 
 QueryInclude:
