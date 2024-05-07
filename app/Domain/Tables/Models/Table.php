@@ -2,7 +2,7 @@
 
 namespace App\Domain\Tables\Models;
 
-use Database\Factories\TableFactory;
+use App\Domain\Tables\Models\Tests\Factories\TableFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;

@@ -1,0 +1,66 @@
+AddTableRequest:
+  type: object
+  headers:
+    X-API-SECRET: string
+  properties:
+    seats:
+      type: integer
+      description: Количество мест
+    location:
+      type: string
+      description: Местоположение
+  required:
+    - seats
+
+EditTableRequest:
+  type: object
+  headers:
+    X-API-SECRET: string
+  properties:
+    seats:
+      type: integer
+      description: Количество мест
+    location:
+      type: string
+      description: Местоположение
+  required:
+    - seats
+
+Table:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: Идентификатор
+    seats:
+      type: integer
+      description: Количество мест
+    location:
+      type: string
+      description: Местоположение
+  required:
+    - id
+    - seats
+    - location
+
+TableResponse:
+  type: object
+  properties:
+    data:
+      $ref: '#/Table'
+    meta:
+      type: object
+  required:
+    - data
+
+TablesResponse:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        $ref: '#/Table'
+    meta:
+      type: object
+  required:
+    - data
