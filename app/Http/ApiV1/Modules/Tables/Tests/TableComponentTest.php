@@ -48,7 +48,7 @@ test('POST http://localhost:8000/api/v1/tables 201', function () {
         'seats' => $request['seats'],
         'location' => $request['location'],
     ]);
-})->with(FakerProvider::$optionalDataset);
+});
 
 test('POST http://localhost:8000/api/v1/tables 400', function () {
     $data = env('X_API_SECRET_DATA');
