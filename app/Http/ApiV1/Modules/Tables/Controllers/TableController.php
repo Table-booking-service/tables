@@ -21,7 +21,7 @@ class TableController
         $value = openssl_encrypt($data, $algo, $key, 0, $iv);           //HDHffpH3pqY64svULpEFhg==
         $headers = request()->header();
         if (!array_key_exists('x-api-secret', $headers) || $headers['x-api-secret'][0] != $value) {
-            abort(403);
+            abort(403, 'Forbidden');
         }
     }
 
@@ -40,7 +40,7 @@ class TableController
         $seats = $request->get('seats');
         $location = $request->get('location');
         if ($seats < 1) {
-            abort(400);
+            abort(400, 'Bad Request');
         }
         $table->seats = $seats;
         $table->location = $location;
@@ -64,7 +64,7 @@ class TableController
         $seats = $request->get('seats');
         $location = $request->get('location');
         if ($seats < 1) {
-            abort(400);
+            abort(400, 'Bad Request');
         }
         $table->seats = $seats;
         $table->location = $location;
